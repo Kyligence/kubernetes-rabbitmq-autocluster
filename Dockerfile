@@ -1,4 +1,4 @@
-FROM rabbitmq:latest
+FROM rabbitmq:3.6.8
 
 ENV RABBITMQ_USE_LONGNAME=true \
     AUTOCLUSTER_LOG_LEVEL=debug \
@@ -7,13 +7,10 @@ ENV RABBITMQ_USE_LONGNAME=true \
     CLEANUP_WARN_ONLY=false \
     AUTOCLUSTER_TYPE=k8s \
     LANG=en_US.UTF-8 \
-    LC_ALL=en_US.UTF-8 \
-    RABBITMQ_SSL_CERTFILE=/usr/lib/rabbitmq/certs/cert.pem \
-    RABBITMQ_SSL_KEYFILE=/usr/lib/rabbitmq/certs/key.pem \
-    RABBITMQ_SSL_CACERTFILE=/usr/lib/rabbitmq/certs/cacert.pem
-# NOTE
-# when docker build this image, rabbitmq_server-*  need to be replace to the specific directory name
-# such as rabbitmq_server-3.7.5
-ADD plugins/*.ez /usr/lib/rabbitmq/lib/rabbitmq_server-*/plugins/
-ADD certs/*.pem /usr/lib/rabbitmq/certs/
+    RABBITMQ_SSL_CERTFILE=/certs/cert.pem \
+    RABBITMQ_SSL_KEYFILE=/certs/key.pem \
+    RABBITMQ_SSL_CACERTFILE=/certs/cacert.pem
+
+ADD plugins/*.ez /plugins/
+ADD certs/*.pem /certs/
 RUN rabbitmq-plugins enable --offline autocluster
